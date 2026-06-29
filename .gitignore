@@ -1,0 +1,11 @@
+# Secrets — never commit real keys
+**/Secrets.plist
+
+# macOS
+.DS_Store
+
+# Xcode
+xcuserdata/
+*.xcuserstate
+DerivedData/
+build/
