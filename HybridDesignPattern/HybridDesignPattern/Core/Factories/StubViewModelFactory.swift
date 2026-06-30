@@ -6,6 +6,7 @@ import Combine
         private let stubPhotoInteractor = StubPhotosInteractor()
         private let stubImagesInteractor = StubImagesInteractor(shouldFail: false)
         private let stubTopicsInteractor = StubTopicsInteractor()
+        private let stubSearchInteractor = StubSearchInteractor()
         private let stubAppState = Store<AppState>(AppState())
 
         func makePhotosViewModel() -> PhotosViewModel {
@@ -29,7 +30,7 @@ import Combine
         }
 
         func makeSearchViewModel() -> SearchViewModel {
-            return SearchViewModel(photosInteractor: stubPhotoInteractor, appState: stubAppState)
+            return SearchViewModel(searchInteractor: stubSearchInteractor, appState: stubAppState)
         }
     }
 #endif

@@ -31,6 +31,6 @@ import Combine
     }
 
     func makeSearchViewModel() -> SearchViewModel {
-        return SearchViewModel(photosInteractor: interactors.photos, appState: appState)
+        return SearchViewModel(searchInteractor: interactors.search, appState: appState)
     }
 }

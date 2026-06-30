@@ -22,21 +22,20 @@ extension DIContainer {
         let images: ImagesRepositoryProtocol
         let photos: PhotosRepositoryProtocol
         let topics: TopicsRepositoryProtocol
-    }
-
-    struct DBRepositories {
-        let searchDB: SearchDBRepositoryProtocol
+        let search: SearchRepositoryProtocol
     }
 
     struct Interactors {
         let images: ImagesInteractorProtocol
         let photos: PhotosInteractorProtocol
         let topics: TopicsInteractorProtocol
+        let search: SearchInteractorProtocol
 
         static var stub: Self {
             .init(images: StubImagesInteractor(),
                   photos: StubPhotosInteractor(),
-                  topics: StubTopicsInteractor())
+                  topics: StubTopicsInteractor(),
+                  search: StubSearchInteractor())
         }
     }
 }

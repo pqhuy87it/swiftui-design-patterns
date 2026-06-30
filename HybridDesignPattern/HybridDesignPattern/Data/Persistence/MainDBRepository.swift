@@ -1,8 +1,11 @@
-import SwiftData
 import Foundation
+import SwiftData
 
-extension MainDBRepository: SearchDBRepositoryProtocol {
-    
+// Shared ModelActor for Database operations
+@ModelActor
+final actor MainDBRepository { }
+
+extension MainDBRepository {
     @MainActor
     func fetchSearchHistory() async throws -> [DBModel.SearchHistory] {
         // Get history, sort by latest time (descending)

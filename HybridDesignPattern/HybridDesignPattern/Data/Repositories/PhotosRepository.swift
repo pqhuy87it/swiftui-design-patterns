@@ -18,20 +18,12 @@ struct PhotosRepository: PhotosRepositoryProtocol, APIRepositoryProtocol {
             endpoint: API.latestPhotos(page: page, perPage: perPage, clientId: clientId)
         )
     }
-
-    func searchPhotos(query: String, page: Int, perPage: Int) async throws -> SearchResultDTO {
-        try await call(
-            endpoint: API.searchPhotos(query: query, page: page, perPage: perPage, clientId: clientId)
-        )
-    }
-
 }
 
 // MARK: - Configure Endpoints for Unsplash
 extension PhotosRepository {
     enum API {
         case latestPhotos(page: Int, perPage: Int, clientId: String)
-        case searchPhotos(query: String, page: Int, perPage: Int, clientId: String)
     }
 }
 
@@ -41,10 +33,6 @@ extension PhotosRepository.API: APICall {
         case let .latestPhotos(page, perPage, _):
             // Attach query parameters directly to the path
             return "/photos?page=\(page)&per_page=\(perPage)"
-        case let .searchPhotos(query, page, perPage, _):
-            // Must encode characters with diacritics/spaces if the user searches for complex keywords
-            let encodedQuery = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-            return "/search/photos?query=\(encodedQuery)&page=\(page)&per_page=\(perPage)"
         }
     }
 
@@ -56,8 +44,7 @@ extension PhotosRepository.API: APICall {
         // Extract API key to inject into header
         let clientId: String
         switch self {
-        case let .latestPhotos(_, _, key),
-            let .searchPhotos(_, _, _, key):
+        case let .latestPhotos(_, _, key):
             clientId = key
         }
 
@@ -80,11 +67,4 @@ struct StubPhotosInteractor: PhotosInteractorProtocol {
         // Return an empty array or Mock data for Preview to display immediately
         return []
     }
-
-    func searchPhotos(query: String, page: Int, perPage: Int) async throws -> SearchResult {
-        return SearchResult(total: 0, totalPages: 0, results: [])
-    }
-
-    func getSearchHistory() async throws -> [String] { return ["Cat", "Nature"] }
-    func saveSearchKeyword(_ keyword: String) async throws {}
 }

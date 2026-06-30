@@ -14,14 +14,13 @@ extension AppEnvironment {
         let session = configuredURLSession()
         let modelContainer = configuredModelContainer()
 
-        // 1. Configure Repositories
-        let apiRepositories = configuredAPIRepositories(session: session)
-        let dbRepositories = configuredDBRepositories(modelContainer: modelContainer)
+        // 1. Configure Repositories (gộp cả API lẫn DB)
+        let repositories = configuredRepositories(session: session,
+                                                  modelContainer: modelContainer)
 
-        // 2. Configure Interactors (pass APIRepositories in)
+        // 2. Configure Interactors
         let interactors = configuredInteractors(appState: appState,
-                                                repositories: apiRepositories,
-                                                dbRepositories: dbRepositories)
+                                                repositories: repositories)
 
         let diContainer = DIContainer(appState: appState,
                                       interactors: interactors)
@@ -42,16 +41,17 @@ extension AppEnvironment {
         return URLSession(configuration: configuration)
     }
 
-    private static func configuredAPIRepositories(session: URLSession) -> DIContainer.Repositories {
+    private static func configuredRepositories(session: URLSession,
+                                               modelContainer: ModelContainer) -> DIContainer.Repositories {
+        let mainDBRepository = MainDBRepository(modelContainer: modelContainer)
         let photosRepository = PhotosRepository(session: session)
         let imagesRepository = ImagesRepository(session: session)
         let topicsRepository = TopicsRepository(session: session)
-        return .init(images: imagesRepository, photos: photosRepository, topics: topicsRepository)
-    }
-
-    private static func configuredDBRepositories(modelContainer: ModelContainer) -> DIContainer.DBRepositories {
-        let mainDBRepository = MainDBRepository(modelContainer: modelContainer)
-        return .init(searchDB: mainDBRepository)
+        let searchRepository = SearchRepository(session: session, dbRepository: mainDBRepository)
+        return .init(images: imagesRepository,
+                     photos: photosRepository,
+                     topics: topicsRepository,
+                     search: searchRepository)
     }
 
     private static func configuredModelContainer() -> ModelContainer {
@@ -63,17 +63,17 @@ extension AppEnvironment {
     }
 
     private static func configuredInteractors(appState _: Store<AppState>,
-                                              repositories: DIContainer.Repositories,
-                                              dbRepositories: DIContainer.DBRepositories) -> DIContainer.Interactors
+                                              repositories: DIContainer.Repositories) -> DIContainer.Interactors
     {
-        let photos = PhotosInteractor(photosRepository: repositories.photos,
-                                      dbRepository: dbRepositories.searchDB)
+        let photos = PhotosInteractor(photosRepository: repositories.photos)
         let images = ImagesInteractor(repository: repositories.images)
         let topics = TopicsInteractor(topicsRepository: repositories.topics)
+        let search = SearchInteractor(searchRepository: repositories.search)
 
         return .init(images: images,
                      photos: photos,
-                     topics: topics)
+                     topics: topics,
+                     search: search)
     }
 }
 

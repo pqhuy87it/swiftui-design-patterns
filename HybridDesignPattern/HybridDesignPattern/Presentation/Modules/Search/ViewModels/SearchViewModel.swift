@@ -24,12 +24,12 @@ final class SearchViewModel: UDFViewModel {
     }
 
     @Published private(set) var state: State = .init()
-    private let photosInteractor: PhotosInteractorProtocol
+    private let searchInteractor: SearchInteractorProtocol
     private let appState: Store<AppState>
     private var cancellables = Set<AnyCancellable>()
 
-    init(photosInteractor: PhotosInteractorProtocol, appState: Store<AppState>) {
-        self.photosInteractor = photosInteractor
+    init(searchInteractor: SearchInteractorProtocol, appState: Store<AppState>) {
+        self.searchInteractor = searchInteractor
         self.appState = appState
 
         appState
@@ -80,7 +80,7 @@ final class SearchViewModel: UDFViewModel {
 
     private func fetchHistory() async {
         do {
-            let history = try await photosInteractor.getSearchHistory()
+            let history = try await searchInteractor.getSearchHistory()
             state.searchHistory = history
         } catch {
             print("Failed to load history: \(error)")
@@ -88,14 +88,14 @@ final class SearchViewModel: UDFViewModel {
     }
 
     private func saveKeyword(_ keyword: String) async {
-        try? await photosInteractor.saveSearchKeyword(keyword)
+        try? await searchInteractor.saveSearchKeyword(keyword)
     }
 
     private func searchPhotos(query: String) async {
         state.searchResult = .isLoading(last: state.searchResult.value,
                                         cancelBag: CancelBag())
         do {
-            let result = try await photosInteractor.searchPhotos(query: query,
+            let result = try await searchInteractor.searchPhotos(query: query,
                                                                  page: 1,
                                                                  perPage: 30)
             state.searchResult = .loaded(result.results)
