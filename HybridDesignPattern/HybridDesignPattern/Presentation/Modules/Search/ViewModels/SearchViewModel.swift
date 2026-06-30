@@ -12,6 +12,8 @@ final class SearchViewModel: UDFViewModel {
         var searchResult: Loadable<[Photo]> = .notRequested
         /// Phản ánh AppState.system.isActive — dùng để UI biết app đang ở foreground hay background
         var isAppActive: Bool = true
+        var isLoadingMore: Bool = false
+        var canLoadMore: Bool = false
     }
 
     // MARK: - Action
@@ -20,6 +22,7 @@ final class SearchViewModel: UDFViewModel {
         case loadHistory
         case updateSearchText(String)
         case performSearch(String)
+        case loadMore
         case clearSearch
     }
 
@@ -27,6 +30,10 @@ final class SearchViewModel: UDFViewModel {
     private let searchInteractor: SearchInteractorProtocol
     private let appState: Store<AppState>
     private var cancellables = Set<AnyCancellable>()
+
+    private let perPage = 30
+    private var page = 1
+    private var currentQuery = ""
 
     init(searchInteractor: SearchInteractorProtocol, appState: Store<AppState>) {
         self.searchInteractor = searchInteractor
@@ -70,8 +77,13 @@ final class SearchViewModel: UDFViewModel {
                 await searchPhotos(query: trimmed)
             }
 
+        case .loadMore:
+            Task { await loadMore() }
+
         case .clearSearch:
             state.searchResult = .notRequested
+            state.canLoadMore = false
+            currentQuery = ""
             Task { await fetchHistory() }
         }
     }
@@ -92,15 +104,42 @@ final class SearchViewModel: UDFViewModel {
     }
 
     private func searchPhotos(query: String) async {
+        currentQuery = query
+        page = 1
+        state.canLoadMore = false
         state.searchResult = .isLoading(last: state.searchResult.value,
                                         cancelBag: CancelBag())
         do {
             let result = try await searchInteractor.searchPhotos(query: query,
-                                                                 page: 1,
-                                                                 perPage: 30)
+                                                                 page: page,
+                                                                 perPage: perPage)
             state.searchResult = .loaded(result.results)
+            state.canLoadMore = page < result.totalPages
+            page = 2
         } catch {
             state.searchResult = .failed(error)
+        }
+    }
+
+    /// Tải trang kế tiếp cho từ khóa hiện tại và nối vào kết quả.
+    private func loadMore() async {
+        guard case let .loaded(current) = state.searchResult,
+              !state.isLoadingMore,
+              state.canLoadMore,
+              !currentQuery.isEmpty else { return }
+
+        state.isLoadingMore = true
+        defer { state.isLoadingMore = false }
+
+        do {
+            let result = try await searchInteractor.searchPhotos(query: currentQuery,
+                                                                 page: page,
+                                                                 perPage: perPage)
+            state.searchResult = .loaded(current + result.results)
+            state.canLoadMore = page < result.totalPages
+            page += 1
+        } catch {
+            state.canLoadMore = false
         }
     }
 }

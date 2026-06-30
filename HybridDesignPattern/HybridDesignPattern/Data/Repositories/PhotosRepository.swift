@@ -21,6 +21,7 @@ struct PhotosRepository: PhotosRepositoryProtocol, APIRepositoryProtocol {
 }
 
 // MARK: - Configure Endpoints for Unsplash
+
 extension PhotosRepository {
     enum API {
         case latestPhotos(page: Int, perPage: Int, clientId: String)

@@ -48,11 +48,22 @@ struct PhotosListView: View {
                                 PhotoCell(photo: photo)
                             }
                             .buttonStyle(.plain)
+                            .onAppear {
+                                // Khi ô cuối cùng xuất hiện -> tải thêm trang kế tiếp
+                                if photo.id == photos.last?.id {
+                                    viewModel.send(.loadMore)
+                                }
+                            }
                         }
                     }
                 }
             }
             .padding()
+
+            if viewModel.state.isLoadingMore {
+                ProgressView()
+                    .padding(.vertical, 16)
+            }
         }
         .refreshable {
             viewModel.send(.refreshPhotos)

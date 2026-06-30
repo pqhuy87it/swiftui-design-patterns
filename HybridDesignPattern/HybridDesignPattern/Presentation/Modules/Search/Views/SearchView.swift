@@ -12,10 +12,9 @@ struct SearchView: View {
         )
     }
     
-    private let columns = [
-        GridItem(.adaptive(minimum: 150, maximum: 200), spacing: 16)
-    ]
-    
+    private let columnCount = 2
+    private let spacing: CGFloat = 16
+
     init(viewModel: @autoclosure @escaping () -> SearchViewModel) {
         self._viewModel = StateObject(wrappedValue: viewModel())
     }
@@ -95,16 +94,45 @@ private extension SearchView {
     
     func resultsGridView(_ photos: [Photo]) -> some View {
         ScrollView {
-            LazyVGrid(columns: columns, spacing: 16) {
-                ForEach(photos) { photo in
-                    NavigationLink(value: photo) {
-                        PhotoCell(photo: photo)
+            HStack(alignment: .top, spacing: spacing) {
+                ForEach(0..<columnCount, id: \.self) { col in
+                    LazyVStack(spacing: spacing) {
+                        ForEach(masonryColumns(for: photos)[col]) { photo in
+                            NavigationLink(value: photo) {
+                                PhotoCell(photo: photo)
+                            }
+                            .buttonStyle(.plain)
+                            .onAppear {
+                                // When the last cell appears -> load the next page
+                                if photo.id == photos.last?.id {
+                                    viewModel.send(.loadMore)
+                                }
+                            }
+                        }
                     }
-                    .buttonStyle(.plain)
                 }
             }
             .padding()
+
+            if viewModel.state.isLoadingMore {
+                ProgressView()
+                    .padding(.vertical, 16)
+            }
         }
+    }
+
+    /// Divide the image into columns using the Masonry algorithm (the lowest column receives the next image).
+    func masonryColumns(for photos: [Photo]) -> [[Photo]] {
+        var columns = Array(repeating: [Photo](), count: columnCount)
+        var heights = Array(repeating: CGFloat(0), count: columnCount)
+
+        for photo in photos {
+            let shortest = heights.indices.min(by: { heights[$0] < heights[$1] })!
+            columns[shortest].append(photo)
+            heights[shortest] += CGFloat(photo.height) / CGFloat(photo.width)
+        }
+
+        return columns
     }
     
     func placeholderView(message: String, icon: String) -> some View {
