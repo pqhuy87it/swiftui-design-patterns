@@ -22,8 +22,7 @@ struct HeroHeaderView: View {
         ZStack(alignment: .bottomLeading) {
             // Get cover_photo from Topics API
             if let coverURL = topic.coverPhoto?.urls.regular {
-                ImageView(imageURL: coverURL,
-                          viewModel: factory.makeImageViewModel())
+                ImageView(viewModel: factory.makeImageViewModel(url: coverURL))
                     .aspectRatio(contentMode: .fill)
                     .frame(maxWidth: .infinity, minHeight: 500, maxHeight: 500)
                     .clipped()

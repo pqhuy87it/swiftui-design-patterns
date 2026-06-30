@@ -1,8 +1,7 @@
 import Foundation
 
 // MARK: - Data implementation
-// Conform UsersRepositoryProtocol (domain) + APIRepositoryProtocol (transport).
-// Map ApiModel.User -> domain User tại ranh giới Data.
+
 struct UsersAPIRepository: UsersRepositoryProtocol, APIRepositoryProtocol {
     let session: URLSession
     let baseURL: String
@@ -13,7 +12,7 @@ struct UsersAPIRepository: UsersRepositoryProtocol, APIRepositoryProtocol {
     }
 
     func fetchUsers() async throws -> [User] {
-        let dtos: [ApiModel.User] = try await call(endpoint: API.getUsers)
+        let dtos: [UserDTO] = try await call(endpoint: API.getUsers)
         return dtos.map { $0.toDomain() }
     }
 }
@@ -50,9 +49,3 @@ extension UsersAPIRepository.API: APICall {
     }
 }
 
-// MARK: - Mapping ApiModel -> Domain entity
-private extension ApiModel.User {
-    func toDomain() -> User {
-        User(id: id, username: username, name: name)
-    }
-}

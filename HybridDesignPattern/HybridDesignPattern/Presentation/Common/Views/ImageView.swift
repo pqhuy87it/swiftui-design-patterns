@@ -1,28 +1,23 @@
 import SwiftUI
 
 struct ImageView: View {
-    let imageURL: URL
-    
-    // Lắng nghe ViewModel
     @StateObject private var viewModel: ImageViewModel
-    
-    // Inject ViewModel qua init thay vì DIContainer environment
-    init(imageURL: URL, viewModel: @autoclosure @escaping () -> ImageViewModel) {
-        self.imageURL = imageURL
+
+    init(viewModel: @autoclosure @escaping () -> ImageViewModel) {
         self._viewModel = StateObject(wrappedValue: viewModel())
     }
-    
+
     var body: some View {
         content
             .onAppear {
-                viewModel.send(.loadImage(imageURL))
+                viewModel.send(.onAppear)
             }
     }
     
     @ViewBuilder private var content: some View {
         switch viewModel.state.image {
         case .notRequested:
-            Color.clear // Sẽ load khi onAppear
+            Color.clear
         case .isLoading:
             ProgressView()
                 .progressViewStyle(CircularProgressViewStyle())

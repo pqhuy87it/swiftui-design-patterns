@@ -3,7 +3,6 @@ import UIKit
 
 struct ImagesRepository: ImagesRepositoryProtocol {
 
-    // Chỉ cần session để tải dữ liệu ảnh; không có baseURL vì tải trực tiếp từ URL tuyệt đối.
     let session: URLSession
 
     init(session: URLSession) {

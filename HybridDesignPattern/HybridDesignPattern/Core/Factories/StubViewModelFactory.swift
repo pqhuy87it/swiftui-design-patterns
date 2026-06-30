@@ -1,33 +1,34 @@
+import Foundation
 import Combine
 
 #if DEBUG
     @MainActor final class StubViewModelFactory: ViewModelFactory {
-        private let stubPhotoInteractor = StubPhotoInteractor()
+        private let stubPhotoInteractor = StubPhotosInteractor()
         private let stubImagesInteractor = StubImagesInteractor(shouldFail: false)
         private let stubAppState = Store<AppState>(AppState())
 
         func makePhotosViewModel() -> PhotosViewModel {
-            return PhotosViewModel(photoInteractor: stubPhotoInteractor)
+            return PhotosViewModel(photosInteractor: stubPhotoInteractor)
         }
 
         func makePhotoDetailViewModel(photo: Photo) -> PhotoDetailViewModel {
             return PhotoDetailViewModel(photo: photo)
         }
 
-        func makeImageViewModel() -> ImageViewModel {
-            return ImageViewModel(interactor: stubImagesInteractor)
+        func makeImageViewModel(url: URL) -> ImageViewModel {
+            return ImageViewModel(imageURL: url, interactor: stubImagesInteractor)
         }
 
         func makeTopicsViewModel() -> TopicsViewModel {
-            return TopicsViewModel(photoInteractor: stubPhotoInteractor)
+            return TopicsViewModel(photosInteractor: stubPhotoInteractor)
         }
 
         func makeTopicRowViewModel(topic: Topic) -> TopicRowViewModel {
-            return TopicRowViewModel(topic: topic, photoInteractor: stubPhotoInteractor)
+            return TopicRowViewModel(topic: topic, photosInteractor: stubPhotoInteractor)
         }
 
         func makeSearchViewModel() -> SearchViewModel {
-            return SearchViewModel(photoInteractor: stubPhotoInteractor, appState: stubAppState)
+            return SearchViewModel(photosInteractor: stubPhotoInteractor, appState: stubAppState)
         }
     }
 #endif

@@ -8,8 +8,7 @@ struct TopicCardView: View {
     var body: some View {
             VStack(alignment: .leading, spacing: 8) {
                 ZStack(alignment: .bottomLeading) {
-                    ImageView(imageURL: photo.urls.small,
-                              viewModel: factory.makeImageViewModel())
+                    ImageView(viewModel: factory.makeImageViewModel(url: photo.urls.small))
                         .aspectRatio(contentMode: .fill)
                         .frame(width: 180, height: 260)
                         .cornerRadius(16)

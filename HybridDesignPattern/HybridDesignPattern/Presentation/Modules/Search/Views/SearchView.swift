@@ -5,7 +5,6 @@ struct SearchView: View {
     @Environment(\.viewModelFactory) private var factory
     @StateObject private var viewModel: SearchViewModel
     
-    // Cầu nối Binding UDF cho SwiftUI Text Field
     private var searchTextBinding: Binding<String> {
         Binding(
             get: { viewModel.state.searchText },
@@ -25,7 +24,6 @@ struct SearchView: View {
         NavigationStack {
             content
                 .navigationTitle("Search Photos")
-                // Truyền custom Binding vào searchable
                 .searchable(text: searchTextBinding, prompt: "Enter keyword (e.g.: Nature, Cats...)")
                 .onSubmit(of: .search) {
                     viewModel.send(.performSearch(viewModel.state.searchText))
@@ -34,7 +32,7 @@ struct SearchView: View {
                     viewModel.send(.loadHistory)
                 }
                 .navigationDestination(for: Photo.self) { photo in
-                    PhotoDetailView(viewModel: factory.makePhotoDetailViewModel(photo: photo)) //
+                    PhotoDetailView(viewModel: factory.makePhotoDetailViewModel(photo: photo))
                 }
         }
     }
@@ -48,10 +46,11 @@ struct SearchView: View {
                 EmptyView()
             case .isLoading:
                 ProgressView("Searching...")
-                    .progressViewStyle(CircularProgressViewStyle()) //
+                    .progressViewStyle(CircularProgressViewStyle())
             case let .loaded(photos):
                 if photos.isEmpty {
-                    placeholderView(message: "No results found", icon: "exclamationmark.triangle") //
+                    placeholderView(message: "No results found",
+                                    icon: "exclamationmark.triangle")
                 } else {
                     resultsGridView(photos)
                 }
@@ -65,17 +64,18 @@ struct SearchView: View {
 }
 
 // MARK: - Subviews
+
 private extension SearchView {
     @ViewBuilder
     func historyView() -> some View {
         if viewModel.state.searchHistory.isEmpty {
-            placeholderView(message: "Search for something!", icon: "magnifyingglass") //
+            placeholderView(message: "Search for something!",
+                            icon: "magnifyingglass")
         } else {
             List {
                 Section(header: Text("Search History")) {
                     ForEach(viewModel.state.searchHistory, id: \.self) { keyword in
                         Button(action: {
-                            // Cập nhật text và tìm kiếm ngay khi click vào lịch sử
                             viewModel.send(.updateSearchText(keyword))
                             viewModel.send(.performSearch(keyword))
                         }) {
@@ -89,7 +89,7 @@ private extension SearchView {
                     }
                 }
             }
-            .listStyle(InsetGroupedListStyle()) //
+            .listStyle(InsetGroupedListStyle())
         }
     }
     
@@ -98,13 +98,12 @@ private extension SearchView {
             LazyVGrid(columns: columns, spacing: 16) {
                 ForEach(photos) { photo in
                     NavigationLink(value: photo) {
-                        // Nhúng ImageViewModel từ factory qua PhotoCell
-                        PhotoCell(photo: photo) //
+                        PhotoCell(photo: photo)
                     }
                     .buttonStyle(.plain)
                 }
             }
-            .padding() //
+            .padding()
         }
     }
     
@@ -113,6 +112,6 @@ private extension SearchView {
             Image(systemName: icon).font(.system(size: 50)).foregroundColor(.gray)
             Text(message).font(.headline).foregroundColor(.secondary)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity) //
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }

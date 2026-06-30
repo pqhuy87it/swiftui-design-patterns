@@ -4,11 +4,13 @@ import Combine
 @MainActor
 final class PhotosViewModel: UDFViewModel {
     
-    // MARK: - UDF State & Action
+    // MARK: - State
     
     struct State {
         var photos: Loadable<[Photo]> = .notRequested
     }
+    
+    // MARK: - Action
     
     enum Action {
         case loadPhotos
@@ -18,14 +20,14 @@ final class PhotosViewModel: UDFViewModel {
     @Published private(set) var state: State
     
     // Dependencies
-    private let photoInteractor: PhotoInteractorProtocol
+    private let photosInteractor: PhotosInteractorProtocol
     
-    init(photoInteractor: PhotoInteractorProtocol) {
-        self.photoInteractor = photoInteractor
+    init(photosInteractor: PhotosInteractorProtocol) {
+        self.photosInteractor = photosInteractor
         self.state = State()
     }
     
-    // MARK: - Intent / Dispatch Action
+    // MARK: - Dispatch Action
     
     func send(_ action: Action) {
         switch action {
@@ -44,7 +46,7 @@ final class PhotosViewModel: UDFViewModel {
         state.photos = .isLoading(last: state.photos.value, cancelBag: CancelBag())
         
         do {
-            let fetchedPhotos = try await photoInteractor.fetchPhotos(page: 1, perPage: 30)
+            let fetchedPhotos = try await photosInteractor.fetchPhotos(page: 1, perPage: 30)
             state.photos = .loaded(fetchedPhotos)
         } catch {
             state.photos = .failed(error)

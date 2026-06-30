@@ -4,38 +4,39 @@ import Combine
 @MainActor
 final class ImageViewModel: UDFViewModel {
     
-    // MARK: - State & Action
+    // MARK: - State
+
     struct State {
+        let imageURL: URL
         var image: Loadable<UIImage> = .notRequested
     }
     
+    // MARK: - Action
+
     enum Action {
-        case loadImage(URL?)
+        case onAppear
     }
-    
-    @Published private(set) var state: State = State()
-    
+
+    @Published private(set) var state: State
+
     private let interactor: ImagesInteractorProtocol
-    
-    init(interactor: ImagesInteractorProtocol) {
+
+    init(imageURL: URL, interactor: ImagesInteractorProtocol) {
         self.interactor = interactor
+        self.state = State(imageURL: imageURL)
     }
-    
+
     // MARK: - Dispatch
+
     func send(_ action: Action) {
         switch action {
-        case .loadImage(let url):
-            guard let url = url else {
-                state.image = .notRequested
-                return
-            }
+        case .onAppear:
             guard case .notRequested = state.image else { return }
-            Task { await fetchImage(url: url) }
+            Task { await fetchImage(url: state.imageURL) }
         }
     }
     
     private func fetchImage(url: URL) async {
-        // Đặt state thành loading
         state.image = .isLoading(last: state.image.value, cancelBag: CancelBag())
         
         do {

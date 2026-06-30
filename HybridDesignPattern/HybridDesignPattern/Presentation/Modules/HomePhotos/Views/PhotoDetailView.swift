@@ -13,8 +13,7 @@ struct PhotoDetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 // Load large size image (regular) for detail
-                ImageView(imageURL: viewModel.imageURL,
-                          viewModel: factory.makeImageViewModel())
+                ImageView(viewModel: factory.makeImageViewModel(url: viewModel.imageURL))
                     .aspectRatio(contentMode: .fit)
                     .frame(maxWidth: .infinity)
                     .cornerRadius(16)

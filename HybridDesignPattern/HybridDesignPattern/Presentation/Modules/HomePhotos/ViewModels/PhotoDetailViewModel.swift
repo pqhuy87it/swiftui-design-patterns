@@ -4,12 +4,14 @@ import Combine
 @MainActor
 final class PhotoDetailViewModel: UDFViewModel {
 
-    // MARK: - UDF State & Action
+    // MARK: - State
     
     struct State {
         let photo: Photo
     }
 
+    // MARK: - Action
+    
     enum Action {
         // TODO: need implement
     }
@@ -20,7 +22,7 @@ final class PhotoDetailViewModel: UDFViewModel {
         self.state = State(photo: photo)
     }
 
-    // MARK: - Dispatch
+    // MARK: - Dispatch Action
     
     func send(_ action: Action) {
         // TODO: need implement

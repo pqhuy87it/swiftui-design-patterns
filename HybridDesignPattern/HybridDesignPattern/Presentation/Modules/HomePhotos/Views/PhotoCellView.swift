@@ -11,10 +11,7 @@ struct PhotoCell: View {
             Color(uiColor: .secondarySystemBackground)
                 .aspectRatio(CGFloat(photo.width) / CGFloat(photo.height), contentMode: .fit)
                 .overlay {
-                    ImageView(
-                        imageURL: photo.urls.small,
-                        viewModel: factory.makeImageViewModel()
-                    )
+                    ImageView(viewModel: factory.makeImageViewModel(url: photo.urls.small))
                 }
                 .clipped()
                 .cornerRadius(12)

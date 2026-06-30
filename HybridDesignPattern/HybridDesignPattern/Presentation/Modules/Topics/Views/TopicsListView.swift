@@ -24,20 +24,19 @@ struct TopicsListView: View {
         case .notRequested:
             Color.clear.onAppear { viewModel.send(.loadTopics) }
         case .isLoading:
-            ProgressView().tint(.white) //
+            ProgressView().tint(.white)
         case let .loaded(topics):
             if let firstTopic = topics.first {
                 ScrollView(.vertical, showsIndicators: false) {
                     VStack(spacing: 0) {
-                        HeroHeaderView(topic: firstTopic) //
+                        HeroHeaderView(topic: firstTopic)
 
                         VStack(spacing: 32) {
                             ForEach(topics.dropFirst()) { topic in
-                                // Khởi tạo Row kèm ViewModel từ Factory
                                 TopicHorizontalRow(topic: topic,
                                                    viewModel: factory.makeTopicRowViewModel(topic: topic))
                             }
-                            Spacer().frame(height: 100) //
+                            Spacer().frame(height: 100)
                         }
                         .padding(.top, 24)
                         .background(Color.black)
@@ -45,7 +44,7 @@ struct TopicsListView: View {
                 }
             }
         case let .failed(error):
-            ErrorView(error: error) { viewModel.send(.refreshTopics) } //
+            ErrorView(error: error) { viewModel.send(.refreshTopics) }
         }
     }
 }

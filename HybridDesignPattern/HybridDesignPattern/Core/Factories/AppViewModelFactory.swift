@@ -1,3 +1,4 @@
+import Foundation
 import Combine
 
 @MainActor final class AppViewModelFactory: ViewModelFactory, ObservableObject {
@@ -10,26 +11,26 @@ import Combine
     }
 
     func makePhotosViewModel() -> PhotosViewModel {
-        return PhotosViewModel(photoInteractor: interactors.photos)
+        return PhotosViewModel(photosInteractor: interactors.photos)
     }
 
     func makePhotoDetailViewModel(photo: Photo) -> PhotoDetailViewModel {
         return PhotoDetailViewModel(photo: photo)
     }
 
-    func makeImageViewModel() -> ImageViewModel {
-        return ImageViewModel(interactor: interactors.images)
+    func makeImageViewModel(url: URL) -> ImageViewModel {
+        return ImageViewModel(imageURL: url, interactor: interactors.images)
     }
 
     func makeTopicsViewModel() -> TopicsViewModel {
-        return TopicsViewModel(photoInteractor: interactors.photos)
+        return TopicsViewModel(photosInteractor: interactors.photos)
     }
 
     func makeTopicRowViewModel(topic: Topic) -> TopicRowViewModel {
-        return TopicRowViewModel(topic: topic, photoInteractor: interactors.photos)
+        return TopicRowViewModel(topic: topic, photosInteractor: interactors.photos)
     }
 
     func makeSearchViewModel() -> SearchViewModel {
-        return SearchViewModel(photoInteractor: interactors.photos, appState: appState)
+        return SearchViewModel(photosInteractor: interactors.photos, appState: appState)
     }
 }

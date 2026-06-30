@@ -23,7 +23,6 @@ import SwiftUI
                 .injectFactory(factory)
                 .inject(environment.diContainer)
         }
-        // Cập nhật AppState.system.isActive mỗi khi scenePhase thay đổi
         .onChange(of: scenePhase) { _, newPhase in
             environment.diContainer.appState[\.system.isActive] = (newPhase == .active)
         }

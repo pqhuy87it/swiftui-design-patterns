@@ -1,6 +1,7 @@
 import Foundation
 
 // MARK: - APICall (Define endpoint)
+
 protocol APICall {
     var path: String { get }
     var method: String { get }

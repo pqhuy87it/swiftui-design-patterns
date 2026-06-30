@@ -1,44 +1,41 @@
 import Foundation
 
 // MARK: - Data implementation
-// Conform PhotosRepositoryProtocol (domain) để trả về domain entity,
-// đồng thời conform APIRepositoryProtocol (transport) để dùng call().
-// Việc map ApiModel -> domain entity nằm ở ranh giới Data này, nên Domain
-// hoàn toàn không biết tới ApiModel.
-struct UnsplashRepository: PhotosRepositoryProtocol, APIRepositoryProtocol {
+
+struct UnsplashRepository: UnsplashRepositoryProtocol, APIRepositoryProtocol {
     let session: URLSession
     let baseURL: String = "https://api.unsplash.com"
 
-    // API key được nạp từ Secrets.plist (xem AppConfig), không hardcode trong source.
+    // API key from Secrets.plist
     let clientId: String = AppConfig.unsplashClientID
 
     init(session: URLSession = .shared) {
         self.session = session
     }
 
-    func fetchLatestPhotos(page: Int, perPage: Int) async throws -> [Photo] {
-        let dtos: [ApiModel.Photo] = try await call(
+    func fetchPhotos(page: Int, perPage: Int) async throws -> [Photo] {
+        let dtos: [PhotoDTO] = try await call(
             endpoint: API.latestPhotos(page: page, perPage: perPage, clientId: clientId)
         )
         return dtos.map { $0.toDomain() }
     }
 
     func searchPhotos(query: String, page: Int, perPage: Int) async throws -> SearchResult {
-        let dto: ApiModel.SearchResult = try await call(
+        let dto: SearchResultDTO = try await call(
             endpoint: API.searchPhotos(query: query, page: page, perPage: perPage, clientId: clientId)
         )
         return dto.toDomain()
     }
 
     func fetchTopics(page: Int, perPage: Int) async throws -> [Topic] {
-        let dtos: [ApiModel.Topic] = try await call(
+        let dtos: [TopicDTO] = try await call(
             endpoint: API.topics(page: page, perPage: perPage, clientId: clientId)
         )
         return dtos.map { $0.toDomain() }
     }
 
     func fetchTopicPhotos(slug: String, page: Int, perPage: Int) async throws -> [Photo] {
-        let dtos: [ApiModel.Photo] = try await call(
+        let dtos: [PhotoDTO] = try await call(
             endpoint: API.topicPhotos(slug: slug, page: page, perPage: perPage, clientId: clientId)
         )
         return dtos.map { $0.toDomain() }
@@ -102,46 +99,8 @@ extension UnsplashRepository.API: APICall {
     }
 }
 
-// MARK: - Mapping ApiModel -> Domain entity (giữ ở tầng Data)
-private extension ApiModel.Photo {
-    func toDomain() -> Photo {
-        Photo(id: id,
-              width: width,
-              height: height,
-              color: color,
-              description: description,
-              altDescription: altDescription,
-              urls: Photo.Urls(raw: urls.raw,
-                               full: urls.full,
-                               regular: urls.regular,
-                               small: urls.small,
-                               thumb: urls.thumb),
-              user: User(id: user.id,
-                         username: user.username,
-                         name: user.name))
-    }
-}
-
-private extension ApiModel.SearchResult {
-    func toDomain() -> SearchResult {
-        SearchResult(total: total,
-                     totalPages: totalPages,
-                     results: results.map { $0.toDomain() })
-    }
-}
-
-private extension ApiModel.Topic {
-    func toDomain() -> Topic {
-        Topic(id: id,
-              slug: slug,
-              title: title,
-              description: description,
-              coverPhoto: coverPhoto?.toDomain())
-    }
-}
-
 // MARK: - Stub (For Xcode Previews & Unit Tests)
-struct StubPhotoInteractor: PhotoInteractorProtocol {
+struct StubPhotosInteractor: PhotosInteractorProtocol {
     func fetchPhotos(page: Int, perPage: Int) async throws -> [Photo] {
         // Return an empty array or Mock data for Preview to display immediately
         return []

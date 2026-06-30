@@ -1,19 +1,21 @@
-import Foundation
 import Combine
+import Foundation
 
 @MainActor
 final class SearchViewModel: UDFViewModel {
-
+    
     // MARK: - State
+
     struct State {
         var searchText: String = ""
         var searchHistory: [String] = []
         var searchResult: Loadable<[Photo]> = .notRequested
-        // Phản ánh AppState.system.isActive — dùng để UI biết app đang ở foreground hay background
+        /// Phản ánh AppState.system.isActive — dùng để UI biết app đang ở foreground hay background
         var isAppActive: Bool = true
     }
 
     // MARK: - Action
+
     enum Action {
         case loadHistory
         case updateSearchText(String)
@@ -21,18 +23,15 @@ final class SearchViewModel: UDFViewModel {
         case clearSearch
     }
 
-    @Published private(set) var state: State = State()
-    private let photoInteractor: PhotoInteractorProtocol
+    @Published private(set) var state: State = .init()
+    private let photosInteractor: PhotosInteractorProtocol
     private let appState: Store<AppState>
     private var cancellables = Set<AnyCancellable>()
 
-    init(photoInteractor: PhotoInteractorProtocol, appState: Store<AppState>) {
-        self.photoInteractor = photoInteractor
+    init(photosInteractor: PhotosInteractorProtocol, appState: Store<AppState>) {
+        self.photosInteractor = photosInteractor
         self.appState = appState
 
-        // Subscribe AppState.system.isActive:
-        // - Khi app trở lại foreground (isActive = true) → tự động reload lịch sử tìm kiếm
-        // - Khi app vào background (isActive = false) → xoá kết quả search đang hiển thị
         appState
             .updates(for: \.system.isActive)
             .receive(on: RunLoop.main)
@@ -48,7 +47,8 @@ final class SearchViewModel: UDFViewModel {
             .store(in: &cancellables)
     }
 
-    // MARK: - Dispatch
+    // MARK: - Dispatch Action
+
     func send(_ action: Action) {
         switch action {
         case .loadHistory:
@@ -77,9 +77,10 @@ final class SearchViewModel: UDFViewModel {
     }
 
     // MARK: - Async Logic
+
     private func fetchHistory() async {
         do {
-            let history = try await photoInteractor.getSearchHistory()
+            let history = try await photosInteractor.getSearchHistory()
             state.searchHistory = history
         } catch {
             print("Failed to load history: \(error)")
@@ -87,16 +88,16 @@ final class SearchViewModel: UDFViewModel {
     }
 
     private func saveKeyword(_ keyword: String) async {
-        try? await photoInteractor.saveSearchKeyword(keyword)
+        try? await photosInteractor.saveSearchKeyword(keyword)
     }
 
     private func searchPhotos(query: String) async {
         state.searchResult = .isLoading(last: state.searchResult.value,
                                         cancelBag: CancelBag())
         do {
-            let result = try await photoInteractor.searchPhotos(query: query,
-                                                                page: 1,
-                                                                perPage: 30)
+            let result = try await photosInteractor.searchPhotos(query: query,
+                                                                 page: 1,
+                                                                 perPage: 30)
             state.searchResult = .loaded(result.results)
         } catch {
             state.searchResult = .failed(error)

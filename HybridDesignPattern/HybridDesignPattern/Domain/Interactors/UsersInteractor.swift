@@ -9,7 +9,7 @@ struct RealUsersInteractor: UsersInteractor {
     let dbRepository: UsersDBRepositoryProtocol
 
     func refreshUsers() async throws {
-        // 1. Fetch new data from Server (đã là domain entity)
+        // 1. Fetch new data from Server
         let users = try await repository.fetchUsers()
         // 2. Overwrite to local Database
         try await dbRepository.store(users: users)

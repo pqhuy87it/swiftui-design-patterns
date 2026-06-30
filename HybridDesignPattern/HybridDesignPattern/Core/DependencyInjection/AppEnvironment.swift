@@ -45,7 +45,7 @@ extension AppEnvironment {
     private static func configuredAPIRepositories(session: URLSession) -> DIContainer.Repositories {
         let unsplashRepository = UnsplashRepository(session: session)
         let imagesRepository = ImagesRepository(session: session)
-        return .init(images: imagesRepository, photos: unsplashRepository)
+        return .init(images: imagesRepository, unsplash: unsplashRepository)
     }
 
     private static func configuredDBRepositories(modelContainer: ModelContainer) -> DIContainer.DBRepositories {
@@ -65,8 +65,8 @@ extension AppEnvironment {
                                               repositories: DIContainer.Repositories,
                                               dbRepositories: DIContainer.DBRepositories) -> DIContainer.Interactors
     {
-        let photos = PhotoInteractor(photosRepository: repositories.photos,
-                                     dbRepository: dbRepositories.searchDB)
+        let photos = PhotosInteractor(unsplashRepository: repositories.unsplash,
+                                      dbRepository: dbRepositories.searchDB)
         let images = ImagesInteractor(repository: repositories.images)
 
         return .init(images: images,

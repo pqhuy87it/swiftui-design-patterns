@@ -3,9 +3,14 @@ import Combine
 
 @MainActor
 final class TopicsViewModel: UDFViewModel {
+    
+    // MARK: - State
+    
     struct State {
         var topics: Loadable<[Topic]> = .notRequested
     }
+    
+    // MARK: - Action
     
     enum Action {
         case loadTopics
@@ -13,11 +18,13 @@ final class TopicsViewModel: UDFViewModel {
     }
     
     @Published private(set) var state: State = State()
-    private let photoInteractor: PhotoInteractorProtocol
+    private let photosInteractor: PhotosInteractorProtocol
     
-    init(photoInteractor: PhotoInteractorProtocol) {
-        self.photoInteractor = photoInteractor
+    init(photosInteractor: PhotosInteractorProtocol) {
+        self.photosInteractor = photosInteractor
     }
+    
+    // MARK: - Dispatch Action
     
     func send(_ action: Action) {
         switch action {
@@ -32,7 +39,7 @@ final class TopicsViewModel: UDFViewModel {
     private func fetchTopics() async {
         state.topics = .isLoading(last: state.topics.value, cancelBag: CancelBag())
         do {
-            let fetched = try await photoInteractor.fetchTopics(page: 1, perPage: 10)
+            let fetched = try await photosInteractor.fetchTopics(page: 1, perPage: 10)
             state.topics = .loaded(fetched)
         } catch {
             state.topics = .failed(error)

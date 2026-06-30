@@ -11,7 +11,7 @@ struct TopicHorizontalRow: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text(topic.title) //
+            Text(topic.title)
                 .font(.title2)
                 .fontWeight(.bold)
                 .foregroundColor(.white)
@@ -21,13 +21,13 @@ struct TopicHorizontalRow: View {
             case .notRequested:
                 Color.clear.frame(height: 260).onAppear { viewModel.send(.loadPhotos) }
             case .isLoading:
-                ProgressView().frame(maxWidth: .infinity).frame(height: 260) //
+                ProgressView().frame(maxWidth: .infinity).frame(height: 260)
             case let .loaded(photos):
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 16) {
                         ForEach(photos) { photo in
                             NavigationLink(value: photo) {
-                                TopicCardView(photo: photo) //
+                                TopicCardView(photo: photo)
                             }
                             .buttonStyle(.plain)
                         }
@@ -35,7 +35,7 @@ struct TopicHorizontalRow: View {
                     .padding(.horizontal, 20)
                 }
             case .failed:
-                Text("Failed to load photos").foregroundColor(.gray).padding(.horizontal, 20) //
+                Text("Failed to load photos").foregroundColor(.gray).padding(.horizontal, 20)
             }
         }
     }
