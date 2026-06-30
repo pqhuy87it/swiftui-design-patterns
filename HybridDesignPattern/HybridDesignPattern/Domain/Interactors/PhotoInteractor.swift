@@ -1,23 +1,17 @@
 import Foundation
 
 struct PhotosInteractor: PhotosInteractorProtocol {
-    let unsplashRepository: UnsplashRepositoryProtocol
+    let photosRepository: PhotosRepositoryProtocol
     let dbRepository: SearchDBRepositoryProtocol
 
     func fetchPhotos(page: Int = 1, perPage: Int = 10) async throws -> [Photo] {
-        try await unsplashRepository.fetchPhotos(page: page, perPage: perPage)
+        let dtos = try await photosRepository.fetchPhotos(page: page, perPage: perPage)
+        return dtos.map { $0.toDomain() }
     }
 
-    func fetchTopics(page: Int = 1, perPage: Int = 10) async throws -> [Topic] {
-        try await unsplashRepository.fetchTopics(page: page, perPage: perPage)
-    }
-
-    func fetchTopicPhotos(slug: String, page: Int = 1, perPage: Int = 30) async throws -> [Photo] {
-        try await unsplashRepository.fetchTopicPhotos(slug: slug, page: page, perPage: perPage)
-    }
-    
     func searchPhotos(query: String, page: Int = 1, perPage: Int = 10) async throws -> SearchResult {
-        try await unsplashRepository.searchPhotos(query: query, page: page, perPage: perPage)
+        let dto = try await photosRepository.searchPhotos(query: query, page: page, perPage: perPage)
+        return dto.toDomain()
     }
 
     func getSearchHistory() async throws -> [String] {

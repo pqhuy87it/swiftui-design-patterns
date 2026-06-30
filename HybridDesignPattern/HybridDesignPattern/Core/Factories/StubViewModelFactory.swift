@@ -5,6 +5,7 @@ import Combine
     @MainActor final class StubViewModelFactory: ViewModelFactory {
         private let stubPhotoInteractor = StubPhotosInteractor()
         private let stubImagesInteractor = StubImagesInteractor(shouldFail: false)
+        private let stubTopicsInteractor = StubTopicsInteractor()
         private let stubAppState = Store<AppState>(AppState())
 
         func makePhotosViewModel() -> PhotosViewModel {
@@ -20,11 +21,11 @@ import Combine
         }
 
         func makeTopicsViewModel() -> TopicsViewModel {
-            return TopicsViewModel(photosInteractor: stubPhotoInteractor)
+            return TopicsViewModel(topicsInteractor: stubTopicsInteractor)
         }
 
         func makeTopicRowViewModel(topic: Topic) -> TopicRowViewModel {
-            return TopicRowViewModel(topic: topic, photosInteractor: stubPhotoInteractor)
+            return TopicRowViewModel(topic: topic, topicsInteractor: stubTopicsInteractor)
         }
 
         func makeSearchViewModel() -> SearchViewModel {

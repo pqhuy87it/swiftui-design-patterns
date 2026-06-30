@@ -20,20 +20,23 @@ struct DIContainer {
 extension DIContainer {
     struct Repositories {
         let images: ImagesRepositoryProtocol
-        let unsplash: UnsplashRepositoryProtocol
+        let photos: PhotosRepositoryProtocol
+        let topics: TopicsRepositoryProtocol
     }
-    
+
     struct DBRepositories {
         let searchDB: SearchDBRepositoryProtocol
     }
-    
+
     struct Interactors {
         let images: ImagesInteractorProtocol
         let photos: PhotosInteractorProtocol
+        let topics: TopicsInteractorProtocol
 
         static var stub: Self {
             .init(images: StubImagesInteractor(),
-                  photos: StubPhotosInteractor())
+                  photos: StubPhotosInteractor(),
+                  topics: StubTopicsInteractor())
         }
     }
 }

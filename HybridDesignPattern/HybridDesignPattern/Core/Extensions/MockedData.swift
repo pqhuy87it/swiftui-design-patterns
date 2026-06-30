@@ -16,7 +16,18 @@ extension Photo {
             small: URL(string: "https://images.unsplash.com/photo-1490750967868-88aa4486c946")!,
             thumb: URL(string: "https://images.unsplash.com/photo-1490750967868-88aa4486c946")!
         ),
-        user: User(id: "u1", username: "nature_lover", name: "John Nature")
+        user: User(id: "1",
+                   username: "test",
+                   name: "john",
+                   firstName: "ivo",
+                   lastName: "moka",
+                   instagramUsername: "",
+                   twitterUsername: "",
+                   portfolioUrl: nil,
+                   totalCollections: 0,
+                   profileImage: User.ProfileImage(small: URL(string: "https://google.com")!,
+                                                   medium: URL(string: "https://google.com")!,
+                                                   large: URL(string: "https://google.com")!))
     )
 }
 

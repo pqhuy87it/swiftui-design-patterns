@@ -2,7 +2,7 @@ import Foundation
 
 // MARK: - Data implementation
 
-struct UnsplashRepository: UnsplashRepositoryProtocol, APIRepositoryProtocol {
+struct PhotosRepository: PhotosRepositoryProtocol, APIRepositoryProtocol {
     let session: URLSession
     let baseURL: String = "https://api.unsplash.com"
 
@@ -13,46 +13,29 @@ struct UnsplashRepository: UnsplashRepositoryProtocol, APIRepositoryProtocol {
         self.session = session
     }
 
-    func fetchPhotos(page: Int, perPage: Int) async throws -> [Photo] {
-        let dtos: [PhotoDTO] = try await call(
+    func fetchPhotos(page: Int, perPage: Int) async throws -> [PhotoDTO] {
+        try await call(
             endpoint: API.latestPhotos(page: page, perPage: perPage, clientId: clientId)
         )
-        return dtos.map { $0.toDomain() }
     }
 
-    func searchPhotos(query: String, page: Int, perPage: Int) async throws -> SearchResult {
-        let dto: SearchResultDTO = try await call(
+    func searchPhotos(query: String, page: Int, perPage: Int) async throws -> SearchResultDTO {
+        try await call(
             endpoint: API.searchPhotos(query: query, page: page, perPage: perPage, clientId: clientId)
         )
-        return dto.toDomain()
     }
 
-    func fetchTopics(page: Int, perPage: Int) async throws -> [Topic] {
-        let dtos: [TopicDTO] = try await call(
-            endpoint: API.topics(page: page, perPage: perPage, clientId: clientId)
-        )
-        return dtos.map { $0.toDomain() }
-    }
-
-    func fetchTopicPhotos(slug: String, page: Int, perPage: Int) async throws -> [Photo] {
-        let dtos: [PhotoDTO] = try await call(
-            endpoint: API.topicPhotos(slug: slug, page: page, perPage: perPage, clientId: clientId)
-        )
-        return dtos.map { $0.toDomain() }
-    }
 }
 
 // MARK: - Configure Endpoints for Unsplash
-extension UnsplashRepository {
+extension PhotosRepository {
     enum API {
         case latestPhotos(page: Int, perPage: Int, clientId: String)
         case searchPhotos(query: String, page: Int, perPage: Int, clientId: String)
-        case topics(page: Int, perPage: Int, clientId: String)
-        case topicPhotos(slug: String, page: Int, perPage: Int, clientId: String)
     }
 }
 
-extension UnsplashRepository.API: APICall {
+extension PhotosRepository.API: APICall {
     var path: String {
         switch self {
         case let .latestPhotos(page, perPage, _):
@@ -62,12 +45,6 @@ extension UnsplashRepository.API: APICall {
             // Must encode characters with diacritics/spaces if the user searches for complex keywords
             let encodedQuery = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
             return "/search/photos?query=\(encodedQuery)&page=\(page)&per_page=\(perPage)"
-        case let .topics(page, perPage, _):
-            // Add path for topics
-            return "/topics?page=\(page)&per_page=\(perPage)"
-        case let .topicPhotos(slug, page, perPage, _):
-            // Append slug to the path exactly like the structure you just saw
-            return "/topics/\(slug)/photos?page=\(page)&per_page=\(perPage)"
         }
     }
 
@@ -80,9 +57,7 @@ extension UnsplashRepository.API: APICall {
         let clientId: String
         switch self {
         case let .latestPhotos(_, _, key),
-            let .searchPhotos(_, _, _, key),
-            let .topics(_, _, key),
-            let .topicPhotos(_, _, _, key):
+            let .searchPhotos(_, _, _, key):
             clientId = key
         }
 
@@ -108,14 +83,6 @@ struct StubPhotosInteractor: PhotosInteractorProtocol {
 
     func searchPhotos(query: String, page: Int, perPage: Int) async throws -> SearchResult {
         return SearchResult(total: 0, totalPages: 0, results: [])
-    }
-
-    func fetchTopics(page: Int, perPage: Int) async throws -> [Topic] {
-        return []
-    }
-
-    func fetchTopicPhotos(slug: String, page: Int, perPage: Int) async throws -> [Photo] {
-        return []
     }
 
     func getSearchHistory() async throws -> [String] { return ["Cat", "Nature"] }

@@ -31,7 +31,7 @@ final class PhotoDetailViewModel: UDFViewModel {
     // MARK: - Derived display data
     
     var imageURL: URL { state.photo.urls.regular }
-    var authorName: String { state.photo.user.name }
+    var authorName: String { state.photo.user.name ?? state.photo.user.username }
     var description: String? { state.photo.description ?? state.photo.altDescription }
     var sizeText: String { "Original size: \(state.photo.width) x \(state.photo.height)" }
 }

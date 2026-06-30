@@ -11,9 +11,8 @@ struct UsersAPIRepository: UsersRepositoryProtocol, APIRepositoryProtocol {
         self.baseURL = baseURL
     }
 
-    func fetchUsers() async throws -> [User] {
-        let dtos: [UserDTO] = try await call(endpoint: API.getUsers)
-        return dtos.map { $0.toDomain() }
+    func fetchUsers() async throws -> [UserDTO] {
+        try await call(endpoint: API.getUsers)
     }
 }
 

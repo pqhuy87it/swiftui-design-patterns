@@ -16,7 +16,7 @@ struct PhotoCell: View {
                 .clipped()
                 .cornerRadius(12)
 
-            Text(photo.user.name)
+            Text(photo.user.name ?? photo.user.username)
                 .font(.caption)
         }
     }

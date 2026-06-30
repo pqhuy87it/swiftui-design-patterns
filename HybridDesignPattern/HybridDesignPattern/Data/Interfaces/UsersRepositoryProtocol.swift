@@ -1,5 +1,5 @@
 import Foundation
 
 protocol UsersRepositoryProtocol {
-    func fetchUsers() async throws -> [User]
+    func fetchUsers() async throws -> [UserDTO]
 }

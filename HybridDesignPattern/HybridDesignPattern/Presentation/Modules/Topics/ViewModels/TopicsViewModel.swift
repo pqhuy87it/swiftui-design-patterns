@@ -18,10 +18,10 @@ final class TopicsViewModel: UDFViewModel {
     }
     
     @Published private(set) var state: State = State()
-    private let photosInteractor: PhotosInteractorProtocol
+    private let topicsInteractor: TopicsInteractorProtocol
     
-    init(photosInteractor: PhotosInteractorProtocol) {
-        self.photosInteractor = photosInteractor
+    init(topicsInteractor: TopicsInteractorProtocol) {
+        self.topicsInteractor = topicsInteractor
     }
     
     // MARK: - Dispatch Action
@@ -39,7 +39,7 @@ final class TopicsViewModel: UDFViewModel {
     private func fetchTopics() async {
         state.topics = .isLoading(last: state.topics.value, cancelBag: CancelBag())
         do {
-            let fetched = try await photosInteractor.fetchTopics(page: 1, perPage: 10)
+            let fetched = try await topicsInteractor.fetchTopics(page: 1, perPage: 10)
             state.topics = .loaded(fetched)
         } catch {
             state.topics = .failed(error)

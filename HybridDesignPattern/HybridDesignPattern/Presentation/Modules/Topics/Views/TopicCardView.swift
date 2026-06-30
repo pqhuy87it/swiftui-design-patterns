@@ -15,7 +15,7 @@ struct TopicCardView: View {
                         .clipped()
                     
                     // Display number of Likes or other information instead of "Activities"
-                    Text("\(photo.user.name)")
+                    Text(photo.user.name ?? photo.user.username)
                         .font(.caption2)
                         .fontWeight(.semibold)
                         .foregroundColor(.white)

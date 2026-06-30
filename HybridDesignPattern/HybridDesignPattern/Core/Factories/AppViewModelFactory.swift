@@ -23,11 +23,11 @@ import Combine
     }
 
     func makeTopicsViewModel() -> TopicsViewModel {
-        return TopicsViewModel(photosInteractor: interactors.photos)
+        return TopicsViewModel(topicsInteractor: interactors.topics)
     }
 
     func makeTopicRowViewModel(topic: Topic) -> TopicRowViewModel {
-        return TopicRowViewModel(topic: topic, photosInteractor: interactors.photos)
+        return TopicRowViewModel(topic: topic, topicsInteractor: interactors.topics)
     }
 
     func makeSearchViewModel() -> SearchViewModel {

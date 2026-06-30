@@ -39,8 +39,6 @@ extension PhotoDTO {
                                       regular: urls.regular,
                                       small: urls.small,
                                       thumb: urls.thumb),
-                     user: User(id: user.id,
-                                username: user.username,
-                                name: user.name))
+                     user: user.toDomain())
     }
 }
