@@ -14,7 +14,6 @@ struct TopicCardView: View {
                         .cornerRadius(16)
                         .clipped()
                     
-                    // Display number of Likes or other information instead of "Activities"
                     Text(photo.user.name ?? photo.user.username)
                         .font(.caption2)
                         .fontWeight(.semibold)
