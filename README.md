@@ -8,10 +8,16 @@ A collection of sample iOS apps exploring different ways to architect a SwiftUI 
 | --- | --- | --- |
 | [HybridDesignPattern](HybridDesignPattern/README.md) | Hybrid: **Clean Architecture + MVVM + UDF** | [README](HybridDesignPattern/README.md) |
 | `MVVMTraditional` | Traditional **MVVM** | — |
-| `TCA(The-Composable-Architecture)` | **TCA** (The Composable Architecture) | — |
+| [TCA(The-Composable-Architecture)](TCA%28The-Composable-Architecture%29/README.md) | **TCA** (The Composable Architecture) | [README](TCA%28The-Composable-Architecture%29/README.md) |
 
 ## HybridDesignPattern
 
 The most documented project. It layers **Clean Architecture** (Domain / Data / Presentation), uses **MVVM** for each screen, and drives every ViewModel with **UDF** (`State` + `Action` + `send`). Features include a masonry photo grid, infinite scroll, topic browsing, and keyword search with locally persisted history.
 
 👉 See the full setup guide (including how to configure the Unsplash API key in `Secrets.plist`) and architecture overview in **[HybridDesignPattern/README.md](HybridDesignPattern/README.md)**.
+
+## TCA (The Composable Architecture)
+
+The same app rebuilt with **[The Composable Architecture](https://github.com/pointfreeco/swift-composable-architecture)**. Every screen is a `@Reducer` (`State` + `Action` + `body`); a single root `Store` drives the whole app, features compose via `Scope`/`.forEach`, side effects are hidden behind injectable `@DependencyClient` clients, and navigation is state-driven. Includes debounced search and `TestStore` unit tests.
+
+👉 See setup and the TCA architecture overview in **[TCA(The-Composable-Architecture)/README.md](TCA%28The-Composable-Architecture%29/README.md)**.
