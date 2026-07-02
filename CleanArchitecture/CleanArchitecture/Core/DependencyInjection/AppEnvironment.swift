@@ -14,11 +14,9 @@ extension AppEnvironment {
         let session = configuredURLSession()
         let modelContainer = configuredModelContainer()
 
-        // 1. Configure Repositories (gộp cả API lẫn DB)
         let repositories = configuredRepositories(session: session,
                                                   modelContainer: modelContainer)
 
-        // 2. Configure Interactors
         let interactors = configuredInteractors(appState: appState,
                                                 repositories: repositories)
 

@@ -6,14 +6,12 @@ struct SearchView: View {
     @State private var searchText = ""
     @State private var searchHistory: [String] = []
     @State private var resultsState: Loadable<[Photo]> = .notRequested
-
-    // Phân trang do View tự quản
     @State private var page = 1
     @State private var isLoadingMore = false
     @State private var canLoadMore = false
     @State private var currentQuery = ""
+    
     private let perPage = 30
-
     private let columnCount = 2
     private let spacing: CGFloat = 16
 
@@ -55,7 +53,7 @@ struct SearchView: View {
         }
     }
 
-    // MARK: - Data loading (gọi thẳng Interactor qua DIContainer)
+    // MARK: - Data loading
 
     private func loadHistory() async {
         if let history = try? await injected.interactors.search.getSearchHistory() {
@@ -74,7 +72,6 @@ struct SearchView: View {
         resultsState = .isLoading(last: resultsState.value, cancelBag: CancelBag())
 
         Task {
-            // Lưu keyword + tải lại lịch sử (chạy ngầm)
             try? await injected.interactors.search.saveSearchKeyword(trimmed)
             await loadHistory()
 

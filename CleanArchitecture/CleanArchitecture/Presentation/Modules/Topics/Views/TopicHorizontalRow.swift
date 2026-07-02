@@ -2,9 +2,10 @@ import SwiftUI
 
 struct TopicHorizontalRow: View {
     @Environment(\.injected) private var injected: DIContainer
-    let topic: Topic
     @State private var photosState: Loadable<[Photo]> = .notRequested
 
+    let topic: Topic
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(topic.title)

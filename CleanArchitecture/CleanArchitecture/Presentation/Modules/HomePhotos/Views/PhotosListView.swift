@@ -2,15 +2,14 @@ import SwiftUI
 
 struct PhotosListView: View {
     @Environment(\.injected) private var injected: DIContainer
+    
     @State private var photosState: Loadable<[Photo]> = .notRequested
     @State private var navigationPath = NavigationPath()
-
-    // Trạng thái phân trang do View tự quản (UI state)
     @State private var page = 1
     @State private var isLoadingMore = false
     @State private var canLoadMore = true
+    
     private let perPage = 30
-
     private let columnCount = 2
     private let spacing: CGFloat = 16
 
@@ -49,7 +48,6 @@ struct PhotosListView: View {
                             }
                             .buttonStyle(.plain)
                             .onAppear {
-                                // Khi ô cuối cùng xuất hiện -> tải thêm trang kế tiếp
                                 if photo.id == photos.last?.id {
                                     Task { await loadMore(currentPhotos: photos) }
                                 }
@@ -86,8 +84,9 @@ struct PhotosListView: View {
         return columns
     }
 
-    // MARK: - Data loading (gọi thẳng Interactor qua DIContainer)
+    // MARK: - Data loading
 
+    // Call Interactor directly via DIContainer
     private func loadPhotos() {
         page = 1
         canLoadMore = true
@@ -107,7 +106,6 @@ struct PhotosListView: View {
             canLoadMore = next.count == perPage
             photosState = .loaded(photos + next)
         } catch {
-            // Giữ nguyên danh sách hiện có nếu trang kế tiếp lỗi
             canLoadMore = false
         }
     }
