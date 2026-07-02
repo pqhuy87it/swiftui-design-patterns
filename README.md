@@ -8,6 +8,7 @@ A collection of sample iOS apps exploring different ways to architect a SwiftUI 
 | --- | --- | --- |
 | [HybridDesignPattern](HybridDesignPattern/README.md) | Hybrid: **Clean Architecture + MVVM + UDF** | [README](HybridDesignPattern/README.md) |
 | [MVVMTraditional](MVVMTraditional/README.md) | Traditional **MVVM** | [README](MVVMTraditional/README.md) |
+| [CleanArchitecture](CleanArchitecture/README.md) | Pure **Clean Architecture** (no ViewModels) | [README](CleanArchitecture/README.md) |
 | [TCA(The-Composable-Architecture)](TCA%28The-Composable-Architecture%29/README.md) | **TCA** (The Composable Architecture) | [README](TCA%28The-Composable-Architecture%29/README.md) |
 
 ## HybridDesignPattern
@@ -21,6 +22,12 @@ The most documented project. It layers **Clean Architecture** (Domain / Data / P
 The same app in **plain, traditional MVVM** — no extra layers or frameworks. Each screen is a `View` + an `ObservableObject` ViewModel (`@Published` state, `async` methods) talking to a `Service` protocol; services decode JSON straight into the domain entities (no DTO layer). Same feature set: masonry grid, infinite scroll, topics, and keyword search with SwiftData-backed history.
 
 👉 See setup and the MVVM architecture overview in **[MVVMTraditional/README.md](MVVMTraditional/README.md)**.
+
+## CleanArchitecture
+
+The same app in **pure Clean Architecture** (Domain / Data / Presentation) with **no ViewModel layer** — in the style of [clean-architecture-swiftui](https://github.com/nalexn/clean-architecture-swiftui). Each `View` holds its state as a `Loadable<T>` and calls **Interactors** directly through a `DIContainer` injected via the environment. Same feature set: masonry grid, infinite scroll, topics, and keyword search with SwiftData-backed history.
+
+👉 See setup and the Clean Architecture overview in **[CleanArchitecture/README.md](CleanArchitecture/README.md)**.
 
 ## TCA (The Composable Architecture)
 
