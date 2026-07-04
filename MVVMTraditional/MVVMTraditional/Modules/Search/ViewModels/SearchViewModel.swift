@@ -33,7 +33,7 @@ final class SearchViewModel: ObservableObject {
             let history = try await searchService.fetchSearchHistory()
             searchHistory = history.map { $0.keyword }
         } catch {
-            // Lỗi đọc DB thì bỏ qua, không cần chặn UI
+            
         }
     }
 

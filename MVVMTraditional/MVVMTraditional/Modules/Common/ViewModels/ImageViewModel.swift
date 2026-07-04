@@ -16,7 +16,6 @@ final class ImageViewModel: ObservableObject {
     }
 
     func loadImage() async {
-        // Chỉ tải một lần
         guard image == nil, !isLoading else { return }
 
         isLoading = true

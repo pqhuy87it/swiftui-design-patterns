@@ -3,13 +3,16 @@ import Combine
 
 @MainActor
 final class PhotosViewModel: ObservableObject {
+    
     // MARK: - Published state
+    
     @Published private(set) var photos: [Photo] = []
     @Published private(set) var isLoading = false
     @Published private(set) var isLoadingMore = false
     @Published private(set) var errorMessage: String?
 
     // MARK: - Dependencies
+    
     private let photosService: PhotosServiceProtocol
     private let perPage = 30
     private var page = 1
@@ -20,7 +23,6 @@ final class PhotosViewModel: ObservableObject {
     }
 
     // MARK: - Intents
-
     /// First time displayed: only load if there is no data.
     func loadPhotos() async {
         guard photos.isEmpty else { return }
