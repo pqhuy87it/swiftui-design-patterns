@@ -1,6 +1,7 @@
 import Foundation
 
 // MARK: - Support Utilities
+
 enum APIError: Swift.Error, LocalizedError, Equatable {
     case invalidURL
     case httpCode(HTTPCode)
