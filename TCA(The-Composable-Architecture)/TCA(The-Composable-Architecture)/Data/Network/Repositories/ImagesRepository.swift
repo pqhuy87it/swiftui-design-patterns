@@ -22,7 +22,7 @@ struct ImagesRepository: ImagesRepositoryProtocol {
 struct StubImagesInteractor: ImagesRepositoryProtocol {
     let shouldFail: Bool
     
-    init(shouldFail: Bool = false) {
+    nonisolated init(shouldFail: Bool = false) {
         self.shouldFail = shouldFail
     }
     

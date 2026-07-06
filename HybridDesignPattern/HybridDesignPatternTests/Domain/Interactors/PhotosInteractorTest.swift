@@ -24,7 +24,6 @@ final class PhotosInteractorTest: XCTestCase {
         let photos = try await sut.fetchPhotos(page: 1, perPage: 10)
 
         XCTAssertEqual(photos.map { $0.id }, ["a", "b", "c"])
-        // Verify the DTO -> domain mapping actually ran
         XCTAssertEqual(photos.first?.urls.small.absoluteString, "https://example.com/a/small.jpg")
         XCTAssertEqual(photos.first?.user.username, "johndoe")
     }

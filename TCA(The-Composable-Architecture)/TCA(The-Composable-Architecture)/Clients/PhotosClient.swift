@@ -21,6 +21,8 @@ extension PhotosClient: DependencyKey {
     static let previewValue = Self(
         fetchPhotos: { _, _ in [.mock] }
     )
+
+    static let testValue = previewValue
 }
 
 extension DependencyValues {

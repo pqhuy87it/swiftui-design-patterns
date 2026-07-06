@@ -17,6 +17,7 @@ final class TopicsRepositoryTest: XCTestCase {
 
     // MARK: - fetchTopics
 
+    @MainActor
     func test_fetchTopics_success_decodesDTOs() async throws {
         MockURLProtocol.requestHandler = { request in
             (HTTPResponseFactory.make(url: request.url, statusCode: 200),
@@ -57,6 +58,7 @@ final class TopicsRepositoryTest: XCTestCase {
 
     // MARK: - fetchTopicPhotos
 
+    @MainActor
     func test_fetchTopicPhotos_success_decodesDTOs() async throws {
         MockURLProtocol.requestHandler = { request in
             (HTTPResponseFactory.make(url: request.url, statusCode: 200),

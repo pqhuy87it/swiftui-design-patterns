@@ -27,6 +27,8 @@ extension TopicsClient: DependencyKey {
         fetchTopics: { _, _ in [.mock] },
         fetchTopicPhotos: { _, _, _ in [.mock] }
     )
+
+    static let testValue = previewValue
 }
 
 extension DependencyValues {

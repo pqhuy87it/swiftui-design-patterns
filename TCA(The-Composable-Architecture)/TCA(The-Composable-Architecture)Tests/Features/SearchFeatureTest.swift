@@ -33,11 +33,11 @@ final class SearchFeatureTest: XCTestCase {
     func test_typingSearchText_debouncesAndSearches() async {
         let photos = [Photo.fixture(id: "p1")]
         let result = SearchResult(total: 1, totalPages: 1, results: photos)
-        let mainQueue = DispatchQueue.test
+        let clock = TestClock()
         let store = TestStore(initialState: SearchFeature.State()) {
             SearchFeature()
         } withDependencies: {
-            $0.mainQueue = mainQueue.eraseToAnyScheduler()
+            $0.continuousClock = clock
             $0.searchClient.searchPhotos = { @Sendable query, _, _ in
                 XCTAssertEqual(query, "cat")
                 return result
@@ -50,7 +50,8 @@ final class SearchFeatureTest: XCTestCase {
         await store.send(.binding(.set(\.searchText, "cat"))) {
             $0.searchText = "cat"
         }
-        await mainQueue.advance(by: .milliseconds(500))
+        
+        await clock.advance(by: .milliseconds(500))
 
         await store.receive(.search("cat")) {
             $0.isLoading = true

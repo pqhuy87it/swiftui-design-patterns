@@ -15,6 +15,7 @@ final class PhotosRepositoryTest: XCTestCase {
         super.tearDown()
     }
 
+    @MainActor
     func test_fetchPhotos_success_decodesDTOs() async throws {
         MockURLProtocol.requestHandler = { request in
             (HTTPResponseFactory.make(url: request.url, statusCode: 200),

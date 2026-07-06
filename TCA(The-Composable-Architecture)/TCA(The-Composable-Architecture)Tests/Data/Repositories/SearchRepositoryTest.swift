@@ -18,6 +18,7 @@ final class SearchRepositoryTest: XCTestCase {
 
     // MARK: - Network: searchPhotos
 
+    @MainActor
     func test_searchPhotos_success_decodesResult() async throws {
         MockURLProtocol.requestHandler = { request in
             (HTTPResponseFactory.make(url: request.url, statusCode: 200),

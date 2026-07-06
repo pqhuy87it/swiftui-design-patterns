@@ -29,7 +29,7 @@ struct SearchFeature {
     }
 
     @Dependency(\.searchClient) var searchClient
-    @Dependency(\.mainQueue) var mainQueue
+    @Dependency(\.continuousClock) var clock
 
     private nonisolated enum CancelID { case debounce, search }
 
@@ -47,9 +47,10 @@ struct SearchFeature {
                 }
                 
                 return .run { [query = state.searchText] send in
+                    try await clock.sleep(for: .milliseconds(500))
                     await send(.search(query))
                 }
-                .debounce(id: CancelID.debounce, for: 0.5, scheduler: mainQueue)
+                .cancellable(id: CancelID.debounce, cancelInFlight: true)
 
             case .binding:
                 return .none

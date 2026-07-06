@@ -36,6 +36,8 @@ extension SearchClient: DependencyKey {
         getHistory: { ["Cat", "Nature", "Space"] },
         saveKeyword: { _ in }
     )
+
+    static let testValue = previewValue
 }
 
 extension DependencyValues {
