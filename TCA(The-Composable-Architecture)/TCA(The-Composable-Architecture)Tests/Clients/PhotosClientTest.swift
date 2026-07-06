@@ -1,8 +1,8 @@
 import XCTest
 @testable import TCA_The_Composable_Architecture_
 
-/// `liveValue` dùng `URLSession.shared` nên phải đăng ký `MockURLProtocol`
-/// toàn cục qua `URLProtocol.registerClass` thay vì inject session như repository test.
+/// `liveValue` uses `URLSession.shared` so it must register `MockURLProtocol`
+/// globally via `URLProtocol.registerClass` instead of injecting sessions like the repository test.
 final class PhotosClientTest: XCTestCase {
 
     override func setUp() {
@@ -27,7 +27,6 @@ final class PhotosClientTest: XCTestCase {
         let photos = try await PhotosClient.liveValue.fetchPhotos(1, 30)
 
         XCTAssertEqual(photos.map(\.id), ["a", "b"])
-        // Kiểm tra mapping DTO -> domain giữ nguyên dữ liệu lồng nhau
         XCTAssertEqual(photos.first?.urls.thumb.absoluteString, "https://example.com/a/thumb.jpg")
         XCTAssertEqual(photos.first?.user.username, "johndoe")
     }

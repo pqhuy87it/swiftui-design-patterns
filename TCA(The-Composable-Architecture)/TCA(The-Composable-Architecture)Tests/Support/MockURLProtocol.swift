@@ -2,7 +2,7 @@ import Foundation
 import XCTest
 @testable import TCA_The_Composable_Architecture_
 
-/// Khẳng định `block` ném đúng một `APIError` mong đợi.
+/// Confirm that the `block` throws the expected `APIError`.
 func assertThrowsAPIError(
     _ expected: APIError,
     file: StaticString = #filePath,
@@ -19,8 +19,8 @@ func assertThrowsAPIError(
     }
 }
 
-/// Chặn mọi request của URLSession trong test và trả về response/data do test cấu hình.
-/// Dùng chung cho cả `session.data(for:)` và `session.download(from:)`.
+/// Block all URLSession requests in the test and return the response/data configured by the test.
+/// Use this for both `session.data(for:)` and `session.download(from:)`.
 final class MockURLProtocol: URLProtocol {
     nonisolated(unsafe) static var requestHandler: ((URLRequest) throws -> (HTTPURLResponse, Data?))?
     nonisolated(unsafe) static var lastRequest: URLRequest?
@@ -77,7 +77,7 @@ enum HTTPResponseFactory {
     }
 }
 
-// MARK: - JSON fixtures khớp với các DTO
+// MARK: - JSON fixtures
 
 enum JSONFixtures {
     static func photo(id: String = "photo-1") -> String {

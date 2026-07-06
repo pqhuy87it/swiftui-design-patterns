@@ -26,7 +26,6 @@ final class TopicsClientTest: XCTestCase {
 
         XCTAssertEqual(topics.map(\.id), ["t1", "t2"])
         XCTAssertEqual(topics.first?.slug, "nature")
-        // coverPhoto lồng nhau cũng phải được map sang domain
         XCTAssertEqual(topics.first?.coverPhoto?.id, "cover-t1")
     }
 

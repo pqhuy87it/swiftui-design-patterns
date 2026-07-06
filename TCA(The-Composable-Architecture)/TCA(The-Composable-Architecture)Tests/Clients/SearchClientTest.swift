@@ -40,9 +40,8 @@ final class SearchClientTest: XCTestCase {
     }
 
     // MARK: - liveValue: search history
-    // liveValue dùng ModelContainer thật (on-disk) của test host nên dữ liệu
-    // tồn tại giữa các lần chạy — dùng keyword duy nhất để test ổn định.
-
+    // liveValue uses the actual ModelContainer (on-disk) of the test host, so the data
+    // persists between runs — use a unique keyword for stability testing.
     func test_liveValue_saveKeyword_thenGetHistory_returnsKeywordFirst() async throws {
         let keyword = "test-\(UUID().uuidString)"
 

@@ -28,7 +28,6 @@ final class TopicsFeatureTest: XCTestCase {
         }
         await store.receive(.fetchTopicsResponse(.success(topics))) {
             $0.isLoading = false
-            // Topic đầu tiên làm hero, các topic còn lại thành rows
             $0.heroTopic = topics[0]
             $0.rows = IdentifiedArray(
                 uniqueElements: topics.dropFirst().map { TopicRowFeature.State(topic: $0) }

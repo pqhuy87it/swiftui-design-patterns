@@ -25,7 +25,7 @@ final class PhotosFeatureTest: XCTestCase {
         await store.receive(.fetchPhotosResponse(.success(photos))) {
             $0.isLoading = false
             $0.photos = photos
-            // Đủ 30 ảnh -> còn trang tiếp theo
+            
             $0.canLoadMore = true
         }
     }
@@ -87,7 +87,7 @@ final class PhotosFeatureTest: XCTestCase {
             $0.isLoadingMore = false
             $0.photos = existing + more
             $0.currentPage = 2
-            // Trang mới trả về < 30 ảnh -> hết trang
+            
             $0.canLoadMore = false
         }
     }

@@ -2,8 +2,8 @@ import XCTest
 import ComposableArchitecture
 @testable import TCA_The_Composable_Architecture_
 
-/// AppFeature chỉ compose 3 feature con qua Scope,
-/// nên test tập trung xác nhận action được định tuyến đúng vào từng child.
+/// App Feature only composes 3 child features through Scope,
+/// so testing should focus on confirming that the action is correctly routed to each child.
 @MainActor
 final class AppFeatureTest: XCTestCase {
 

@@ -44,7 +44,6 @@ final class SearchFeatureTest: XCTestCase {
             }
         }
 
-        // Gõ 2 lần liên tiếp trong cửa sổ debounce 0.5s -> chỉ search từ khóa cuối
         await store.send(.binding(.set(\.searchText, "ca"))) {
             $0.searchText = "ca"
         }
@@ -146,8 +145,8 @@ final class SearchFeatureTest: XCTestCase {
             $0.searchClient.getHistory = { @Sendable in recorder.values }
             $0.searchClient.searchPhotos = { @Sendable _, _, _ in result }
         }
-        // Flow gồm nhiều action lồng nhau (loadHistory + search chạy song song),
-        // chỉ kiểm tra các mốc quan trọng và state cuối cùng.
+        // The flow consists of multiple nested actions (loadHistory + search running in parallel),
+        // only checks important milestones and the final state.
         store.exhaustivity = .off
 
         await store.send(.performSearch("  cat  ")) {

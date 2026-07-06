@@ -53,7 +53,7 @@ extension Topic {
     }
 }
 
-// MARK: - Thread-safe recorder cho các closure @Sendable trong dependency mock
+// MARK: - Thread-safe recorder
 
 final class KeywordRecorder: @unchecked Sendable {
     private let lock = NSLock()
