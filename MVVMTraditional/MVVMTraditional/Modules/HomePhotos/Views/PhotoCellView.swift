@@ -19,3 +19,9 @@ struct PhotoCell: View {
         }
     }
 }
+
+#Preview {
+    PhotoCell(photo: .mock)
+        .frame(width: 180)
+        .padding()
+}

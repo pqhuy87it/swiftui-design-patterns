@@ -47,3 +47,9 @@ struct PhotoDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 }
+
+#Preview {
+    NavigationStack {
+        PhotoDetailView(viewModel: PhotoDetailViewModel(photo: .mock))
+    }
+}

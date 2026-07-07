@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 // MARK: - Mock data
 
@@ -39,6 +40,21 @@ extension Photo {
         ),
         user: .mock
     )
+
+    static func mock(id: String) -> Photo {
+        Photo(
+            id: id,
+            width: mock.width,
+            height: mock.height,
+            color: mock.color,
+            description: mock.description,
+            altDescription: mock.altDescription,
+            urls: mock.urls,
+            user: mock.user
+        )
+    }
+
+    static let mocks: [Photo] = (1...6).map { mock(id: "photo-\($0)") }
 }
 
 extension Topic {
@@ -49,5 +65,58 @@ extension Topic {
         description: "The great outdoors, captured beautifully.",
         coverPhoto: .mock
     )
+
+    static func mock(id: String, title: String) -> Topic {
+        Topic(
+            id: id,
+            slug: title.lowercased().replacingOccurrences(of: " ", with: "-"),
+            title: title,
+            description: mock.description,
+            coverPhoto: mock.coverPhoto
+        )
+    }
+
+    static let mocks: [Topic] = [
+        mock(id: "topic-1", title: "Nature"),
+        mock(id: "topic-2", title: "Wallpapers"),
+        mock(id: "topic-3", title: "Architecture"),
+        mock(id: "topic-4", title: "Travel")
+    ]
+}
+
+// MARK: - Preview services (return mock data, no network)
+
+struct PreviewImagesService: ImagesServiceProtocol {
+    func loadImage(url: URL) async throws -> UIImage {
+        UIImage(named: "samplePhoto") ?? UIImage(systemName: "photo") ?? UIImage()
+    }
+}
+
+struct PreviewPhotosService: PhotosServiceProtocol {
+    func fetchPhotos(page: Int, perPage: Int) async throws -> [Photo] {
+        Photo.mocks
+    }
+}
+
+struct PreviewTopicsService: TopicsServiceProtocol {
+    func fetchTopics(page: Int, perPage: Int) async throws -> [Topic] {
+        Topic.mocks
+    }
+
+    func fetchTopicPhotos(slug: String, page: Int, perPage: Int) async throws -> [Photo] {
+        Photo.mocks
+    }
+}
+
+struct PreviewSearchService: SearchServiceProtocol {
+    func searchPhotos(query: String, page: Int, perPage: Int) async throws -> SearchResult {
+        SearchResult(total: Photo.mocks.count, totalPages: 1, results: Photo.mocks)
+    }
+
+    @MainActor func fetchSearchHistory() async throws -> [DBModel.SearchHistory] {
+        ["Nature", "Cats", "Mountains"].map { DBModel.SearchHistory(keyword: $0) }
+    }
+
+    func saveSearchKeyword(_ keyword: String) async throws {}
 }
 #endif

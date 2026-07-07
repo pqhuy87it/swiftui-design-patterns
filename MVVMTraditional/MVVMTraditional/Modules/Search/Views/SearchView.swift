@@ -127,3 +127,7 @@ private extension SearchView {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
+
+#Preview {
+    SearchView(viewModel: SearchViewModel(searchService: PreviewSearchService()))
+}

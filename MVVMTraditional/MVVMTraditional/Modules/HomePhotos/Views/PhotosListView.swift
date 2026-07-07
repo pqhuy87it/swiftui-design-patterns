@@ -85,3 +85,7 @@ struct PhotosListView: View {
         return columns
     }
 }
+
+#Preview {
+    PhotosListView(viewModel: PhotosViewModel(photosService: PreviewPhotosService()))
+}

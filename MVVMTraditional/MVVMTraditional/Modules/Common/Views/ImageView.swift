@@ -8,6 +8,14 @@ struct ImageView: View {
     }
 
     init(url: URL) {
+        #if DEBUG
+        // In Xcode Previews, avoid real network and show the bundled sample image.
+        if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" {
+            self.init(viewModel: ImageViewModel(imageURL: url,
+                                                imagesService: PreviewImagesService()))
+            return
+        }
+        #endif
         self.init(viewModel: ImageViewModel(imageURL: url,
                                             imagesService: ImagesService()))
     }

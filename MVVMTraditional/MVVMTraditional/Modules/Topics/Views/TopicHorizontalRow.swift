@@ -40,3 +40,10 @@ struct TopicHorizontalRow: View {
         }
     }
 }
+
+#Preview {
+    TopicHorizontalRow(
+        viewModel: TopicRowViewModel(topic: .mock, topicsService: PreviewTopicsService())
+    )
+    .background(Color.black)
+}

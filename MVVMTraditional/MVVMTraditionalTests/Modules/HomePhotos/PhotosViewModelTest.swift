@@ -31,7 +31,7 @@ final class PhotosViewModelTest: XCTestCase {
         let sut = PhotosViewModel(photosService: service)
 
         await sut.loadPhotos()
-        await sut.loadPhotos() // lần 2 bị guard chặn
+        await sut.loadPhotos()
 
         XCTAssertEqual(service.callCount, 1)
     }

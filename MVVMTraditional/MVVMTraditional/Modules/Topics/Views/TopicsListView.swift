@@ -21,6 +21,16 @@ struct TopicsListView: View {
         }
     }
 
+    /// Live service normally; in Xcode Previews returns mock data so rows render without network.
+    private var rowService: TopicsServiceProtocol {
+        #if DEBUG
+        if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" {
+            return PreviewTopicsService()
+        }
+        #endif
+        return TopicsService()
+    }
+
     @ViewBuilder private var content: some View {
         if viewModel.isLoading && viewModel.topics.isEmpty {
             ProgressView().tint(.white)
@@ -36,7 +46,7 @@ struct TopicsListView: View {
                     VStack(spacing: 32) {
                         ForEach(viewModel.topics.dropFirst()) { topic in
                             TopicHorizontalRow(
-                                viewModel: TopicRowViewModel(topic: topic, topicsService: TopicsService())
+                                viewModel: TopicRowViewModel(topic: topic, topicsService: rowService)
                             )
                         }
                         Spacer().frame(height: 100)
@@ -47,4 +57,8 @@ struct TopicsListView: View {
             }
         }
     }
+}
+
+#Preview {
+    TopicsListView(viewModel: TopicsViewModel(topicsService: PreviewTopicsService()))
 }
