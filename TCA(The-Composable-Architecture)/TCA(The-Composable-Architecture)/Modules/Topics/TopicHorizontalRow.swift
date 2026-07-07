@@ -35,3 +35,14 @@ struct TopicHorizontalRow: View {
         }
     }
 }
+
+#Preview {
+    TopicHorizontalRow(
+        store: Store(
+            initialState: TopicRowFeature.State(topic: .mock, photos: Photo.mocks)
+        ) {
+            TopicRowFeature()
+        }
+    )
+    .background(Color.black)
+}

@@ -18,7 +18,7 @@ extension ImageClient: DependencyKey {
     }()
 
     static let previewValue = Self(
-        loadImage: { _ in UIImage(systemName: "photo") ?? UIImage() }
+        loadImage: { _ in UIImage(named: "samplePhoto") ?? UIImage(systemName: "photo") ?? UIImage() }
     )
 
     static let testValue = previewValue

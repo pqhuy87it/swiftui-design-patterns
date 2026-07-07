@@ -46,3 +46,20 @@ struct TopicsListView: View {
         }
     }
 }
+
+#Preview {
+    TopicsListView(
+        store: Store(
+            initialState: TopicsFeature.State(
+                heroTopic: .mock,
+                rows: IdentifiedArray(
+                    uniqueElements: Topic.mocks.map {
+                        TopicRowFeature.State(topic: $0, photos: Photo.mocks)
+                    }
+                )
+            )
+        ) {
+            TopicsFeature()
+        }
+    )
+}

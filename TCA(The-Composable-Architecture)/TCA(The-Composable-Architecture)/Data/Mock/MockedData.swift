@@ -29,6 +29,21 @@ extension Photo {
                                                    medium: URL(string: "https://google.com")!,
                                                    large: URL(string: "https://google.com")!))
     )
+
+    static func mock(id: String) -> Photo {
+        Photo(
+            id: id,
+            width: mock.width,
+            height: mock.height,
+            color: mock.color,
+            description: mock.description,
+            altDescription: mock.altDescription,
+            urls: mock.urls,
+            user: mock.user
+        )
+    }
+
+    static let mocks: [Photo] = (1...6).map { mock(id: "\($0)") }
 }
 
 extension Topic {
@@ -39,5 +54,22 @@ extension Topic {
         description: "Beautiful destinations to visit this spring.",
         coverPhoto: Photo.mock
     )
+
+    static func mock(id: String, title: String) -> Topic {
+        Topic(
+            id: id,
+            slug: title.lowercased().replacingOccurrences(of: " ", with: "-"),
+            title: title,
+            description: mock.description,
+            coverPhoto: mock.coverPhoto
+        )
+    }
+
+    static let mocks: [Topic] = [
+        mock(id: "t1", title: "Spring Escapes"),
+        mock(id: "t2", title: "Wallpapers"),
+        mock(id: "t3", title: "Nature"),
+        mock(id: "t4", title: "Architecture")
+    ]
 }
 #endif

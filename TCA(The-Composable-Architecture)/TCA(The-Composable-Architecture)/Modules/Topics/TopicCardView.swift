@@ -34,5 +34,5 @@ struct TopicCardView: View {
 #Preview {
     TopicCardView(photo: Photo.mock)
         .padding()
-        .background(Color.black) // Add black background to easily see white text
+        .background(Color.black)
 }

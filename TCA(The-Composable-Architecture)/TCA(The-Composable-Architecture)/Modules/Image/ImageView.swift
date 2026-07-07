@@ -35,8 +35,6 @@ struct ImageView: View {
             url: URL(string: "https://images.unsplash.com/photo-1490750967868-88aa4486c946")!
         )) {
             ImageFeature()
-        } withDependencies: {
-            $0.imageClient.loadImage = { _ in UIImage(systemName: "star.fill")! }
         }
     )
     .frame(width: 200, height: 200)
